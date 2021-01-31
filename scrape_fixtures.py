@@ -2,6 +2,7 @@ import sqlite3
 import requests
 import dropbox
 from config import keys
+from time import sleep
 
 dbx = dropbox.Dropbox(keys['dropbox'])
 
@@ -47,7 +48,9 @@ def add_fixtures():
     fixtures_list = []
 
     for gw in range(1, 39):
+        print(f'Getting Gameweek: {gw} fixtures')
         r = requests.get(f'{base_url}{gw}')
+        sleep(1)
         json_data = r.json()
         for fixture in json_data:
             fixtures_list.append((fixture['id'], gw, fixture['team_h'], fixture['team_a']))

@@ -1,6 +1,7 @@
 # Database
 *.db
 config.py
+keys.json
 
 # Created by https://www.gitignore.io/api/python
 # Edit at https://www.gitignore.io/?templates=python
@@ -130,5 +131,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+/data
+config.py
+*.txt
+/pundit
 
 # End of https://www.gitignore.io/api/python
