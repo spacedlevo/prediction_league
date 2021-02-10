@@ -135,6 +135,6 @@ dmypy.json
 /data
 config.py
 *.txt
-/pundit
+/pundits
 
 # End of https://www.gitignore.io/api/python
