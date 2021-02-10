@@ -2,28 +2,8 @@ import random
 
 from itertools import zip_longest
 
-players = [
-'Andy Hudson or Dean Charles',
-'Dave Melia',
-'Gary Regan',
-'Chris Hart',
-'Sean Burns',
-'James Forshaw',
-'Jonny Parker',
-'Ryan Todd',
-'Adam Pitt',
-'Scott Frazer',
-'Ste Harrison',
-'Colin Croft',
-'Andy Mckenna', 
-'Chris Johnson',
-'Josh Jones',
-'Amy Fenna',
-'Kate Daley',
-'Joe Daley',
-'Graham Handley', 
-'Graham Kay'
-]
+with open("cupguesses.txt") as f:
+    players = f.readlines()
 
 
 def grouper(i, n, fillvalue=None):
@@ -34,4 +14,4 @@ def grouper(i, n, fillvalue=None):
 random.shuffle(players)
 
 for home, away in grouper(players, 2):
-    print(f'{home} v {away}')
+    print(f'{home.strip()} v {away.strip()}')
