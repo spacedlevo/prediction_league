@@ -15,14 +15,14 @@ gw = sys.argv[1]
 teams_names = {
     'united':'utd',
     'spurs':'tottenham',
-    'sheff utd': 'sheffield utd'
+    'wolves':'wolverhampton'
 }
 
 c.execute('SELECT name FROM teams') 
 teams = [team[0] for team in c.fetchall()]
 c.execute('SELECT name FROM players') 
 players = [player[0] for player in c.fetchall()]
-predictions_file = '/home/levo/Dropbox/Predictions/2020_21/gameweek{}.txt'.format(gw)
+predictions_file = '/home/levo/Dropbox/Predictions/2021_22/gameweek{}.txt'.format(gw)
 header = ['gameweek', 'player', 'home_team', 'away_team', 'home_goals', 'away_goals']
 
 
@@ -79,17 +79,8 @@ def get_counts():
             names.append(row[1])
         counts = Counter(names)
         for k, i in counts.items():
-            if i != 11:
+            if i != 10:
                 print('{} has {} entries'.format(k.title(), i))
-
-
-def add_pundits(pundit):
-    try:
-        with open('data/pundits/2020_21/{}_{}.csv'.format(pundit, gw), 'r') as pundit_file:
-            pundit_predictions = csv.reader(pundit_file)
-            csvwriter.writerows(pundit_predictions)
-    except FileNotFoundError:
-        print(f"No file for {pundit}")
 
 
 if __name__ == '__main__':

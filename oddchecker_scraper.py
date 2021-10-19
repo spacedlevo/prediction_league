@@ -1,3 +1,5 @@
+#Scrape Oddscheckers website to get the favourite correct score
+
 from time import sleep
 import re
 import sys
@@ -5,6 +7,13 @@ import sqlite3
 
 import requests
 from bs4 import BeautifulSoup
+import cloudscraper
+
+scraper = cloudscraper.create_scraper(browser={
+        'browser': 'firefox',
+        'platform': 'linux',
+        'mobile': False
+    })
 
 db = sqlite3.connect('data/predictions.db')
 c = db.cursor()
@@ -34,6 +43,7 @@ def get_fixtures(gw):
     return c.fetchall()
 
 def parse_winner(result):
+    # Uses Regular Expression to parse the teams name
     teamRegex = re.compile(r'^\D+')
     winner = teamRegex.findall(result)
     winner = ''.join(winner)
@@ -41,12 +51,14 @@ def parse_winner(result):
     return winner.lower()
 
 def parse_score(score):
+    # Gets the goals from the score.
     score_regex = re.compile(r'\d-\d')
     result = score_regex.findall(score)
     result = result[0].split('-')
     return result
 
 def fixture_dictonary(fixture_tup, score):
+    # Creates a dictonary in order to organise and feed into the db
     fixture = {}
     fixture['id'] = fixture_tup[0]
     fixture['home'] = fixture_tup[1]
@@ -57,6 +69,7 @@ def fixture_dictonary(fixture_tup, score):
 
 
 def check_draw(fixture):
+    # I want to filter out draws, so I compare the goals to return True/False
     goals = parse_score(fixture)
     if goals[0] == goals[1]:
         return True
@@ -72,7 +85,7 @@ def get_oddschecker(fixtures):
         url = baseurl + sport + country + league + join_fixture + '/' + market
         print(url)
         try:
-            r = requests.get(url, headers=headers)
+            r = scraper.get(url)
         except Exception as e:
             print(e)
 

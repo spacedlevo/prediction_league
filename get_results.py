@@ -12,6 +12,9 @@ EVENT_URL = 'https://fantasy.premierleague.com/api/fixtures/?event='
 DATABASE_FILE = '/home/levo/Documents/projects/prediction_league/data/predictions.db'
 con = sqlite3.connect(DATABASE_FILE)
 cur = con.cursor()
+
+# Current GW is helpd in Dropbox to help sync with Siri Shortcuts.
+# On rewrite may just take this directly from the API
 with open('/home/levo/Dropbox/Apps/predictions_league/gameweek.txt') as f:
     gw = int(f.read().strip()) - 1
 
@@ -25,10 +28,6 @@ def create_table():
     ''')
 
 def add_to_database(results):
-    # insert or replace into Book (ID, Name, TypeID, Level, Seen) values
-    # ((select ID from Book where Name = "SearchName"), "SearchName", ...);
-
-
     results_data = []
     for row in results:
         cur.execute(''' SELECT id FROM fixtures WHERE home_teamid = ? AND away_teamid = ? ''',(row[0], row[1]))
@@ -63,8 +62,7 @@ def print_results():
 
 
 def upload_db():
-    # cnopts = sftp.CnOpts()
-    # cnopts.hostkeys.load('sftpserver.pub')
+    # SSH the new database to the website
     with open('/home/levo/Documents/projects/prediction_league/keys.json') as f:
         users_deets = json.load(f)
 
@@ -80,7 +78,7 @@ r = requests.get(f'{EVENT_URL}{gw}')
 print(f'Getting {EVENT_URL}{gw}')
 result_json = r.json()
 for result in result_json:
-    if result['finished_provisional']:
+    if result['started']:
         results.append([result['team_h'], result['team_a'], 
             result['team_h_score'], result['team_a_score']])
 

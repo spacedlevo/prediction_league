@@ -14,4 +14,4 @@ def grouper(i, n, fillvalue=None):
 random.shuffle(players)
 
 for home, away in grouper(players, 2):
-    print(f'{home.strip()} v {away.strip()}')
+    print(f'{home.strip().title()} v {away.strip().title()}')

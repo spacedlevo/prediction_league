@@ -29,5 +29,5 @@ for prediction in week_predictions:
 
 fixture_str = '\n'.join(formatted_fix)
 print(fixture_str)
-dbx.files_upload(str.encode(fixture_str), f'/predictions/gameweek{gw}.txt', mode=dropbox.files.WriteMode("overwrite"))  
+dbx.files_upload(str.encode(fixture_str), f'/predictions/gameweek{gw}.txt', mode=dropbox.files.WriteMode("overwrite"))
 db.close()

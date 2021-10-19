@@ -1,3 +1,5 @@
+# A Command Line Script to look up fixtures and return the predictions from each player
+
 import sqlite3
 
 db = 'data/predictions.db'
@@ -39,15 +41,13 @@ def get_predictions(fixture_id):
 
 count = {'h':0, 'd':0, 'a':0}
 def count_predictions(fixture):
+    # Counts how many have predicted a home/away win or draw
     if fixture[2] > fixture[4]:
         count['h'] += 1
     elif fixture[4] > fixture[2]:
         count['a'] += 1
     else:
         count['d'] += 1
-
-    
-
  
 for i in get_fixtures(gw):
     print(i)
