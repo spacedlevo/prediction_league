@@ -136,5 +136,8 @@ dmypy.json
 config.py
 *.txt
 /pundits
+oddschecker_scraper.py
+keys.json
+
 
 # End of https://www.gitignore.io/api/python

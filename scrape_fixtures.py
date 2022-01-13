@@ -3,15 +3,25 @@ import requests
 import dropbox
 from config import keys
 from time import sleep
+from tqdm import tqdm
+
 
 dbx = dropbox.Dropbox(keys['dropbox'])
 
 base_url = f'https://fantasy.premierleague.com/api/fixtures/?event='
+bootstrap = 'https://fantasy.premierleague.com/api/bootstrap-static/'
 con = sqlite3.connect('data/predictions.db')
 cur = con.cursor() 
 
+def gameweeks():
+    r = requests.get(bootstrap)
+    data = r.json()['events']
+    return len(data)
+
+    
+
 def create_table():
-    url = 'https://fantasy.premierleague.com/api/bootstrap-static/'
+    url = bootstrap
     cur.executescript(
         '''
         CREATE TABLE IF NOT EXISTS teams (
@@ -31,7 +41,7 @@ def create_table():
         con.executemany('INSERT INTO teams VALUES (?, ?)', (team_list))
     con.commit()
 
-def add_fixtures():
+def add_fixtures(gw):
     cur.executescript(
         '''
         DROP TABLE fixtures;
@@ -47,8 +57,7 @@ def add_fixtures():
 
     fixtures_list = []
 
-    for gw in range(1, 39):
-        print(f'Getting Gameweek: {gw} fixtures')
+    for gw in tqdm(range(1, gw + 1)):
         r = requests.get(f'{base_url}{gw}')
         sleep(1)
         json_data = r.json()
@@ -58,8 +67,8 @@ def add_fixtures():
     con.commit()
 
 
-def create_text_files():
-    for week in range(1,39):
+def create_text_files(gw):
+    for week in tqdm(range(1, gw + 1)):
         cur.execute(''' 
             SELECT
                 home_team.name home_team,
@@ -75,15 +84,13 @@ def create_text_files():
         formatted_fixtures = '\n'.join(formatted_fixtures)
         dbx.files_upload(str.encode(formatted_fixtures), f'/fixtures/fixtures{week}.txt', mode=dropbox.files.WriteMode("overwrite"))
 
-    print(f'Completed {week}')
-
-
     
 
 def main():
+    rounds = gameweeks()
     create_table()
-    add_fixtures()
-    create_text_files()
+    add_fixtures(rounds)
+    create_text_files(rounds)
 
 if __name__ == "__main__":
     main()
