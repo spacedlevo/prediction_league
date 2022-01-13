@@ -136,7 +136,6 @@ dmypy.json
 config.py
 *.txt
 /pundits
-oddschecker_scraper.py
 keys.json
 
 
