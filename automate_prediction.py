@@ -9,7 +9,7 @@ predictions_db_location = (
 gameweek_file = "/home/levo/Dropbox/Apps/predictions_league/gameweek.txt"
 PUSHOVER_API = {
     "PUSHOVER_USER": "h1bpxMpSULKQIZHXT57tOztVxXcx8G",
-    "PUSHOVER_TOKEN": "aej2j6xboeo3khefeizmmkvg74cxs9",
+    "PUSHOVER_TOKEN": "",
 }
 
 
