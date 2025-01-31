@@ -1,0 +1,113 @@
+{% extends "base.html" %} {% block content %}
+<h1 class="mb-4">Stats</h1>
+<h2>Submission Progress</h2>
+<div class="progress mb-4">
+  <div
+    class="progress-bar"
+    role="progressbar"
+    style="width: {{ ( stats_data.total_submitted / stats_data.number_of_players) * 100 }}%;"
+    aria-valuenow="{{ stats_data.total_submitted }}"
+    aria-valuemin="0"
+    aria-valuemax="{{ stats_data.number_of_players }}"
+  >
+    {{ stats_data.total_submitted }} / {{ stats_data.number_of_players }}
+  </div>
+</div>
+
+<h2>Last Updated</h2>
+<table class="table table-bordered table-sm table-condensed">
+  <thead>
+    <tr>
+      <th scope="col">Item</th>
+      <th scope="col">Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in stats_data.last_updated %}
+    <tr>
+      <td>{{ item[0] }}</td>
+      <td>{{ item[1] }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h2>Total Predictions</h2>
+<table class="table table-striped table-sm table-condensed">
+  <caption>
+    Total Predictions Including 9-9 placeholders
+  </caption>
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Total Predictions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in stats_data.total_predictions|sort(attribute=1, reverse=True)
+    %}
+    <tr>
+      <td>{{ item[0].title() }}</td>
+      <td>{{ item[1] }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<h2>Not Submitted</h2>
+<div class="table-responsive" id="sortableTableWrapper">
+  <table
+    id="sortableTable"
+    class="table table-striped table-sm table-condensed"
+  >
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        {% for i in range(1, stats_data.max_gameweek + 1) %}
+        <th scope="col">{{ i }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in stats_data.predictions_9_9|sort(attribute=0) %}
+      <tr>
+        <td>{{ item[0].title() }}</td>
+        {% for prediction in item[1:] %}
+        <td>{{ prediction }}</td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const getCellValue = (tr, idx) =>
+      tr.children[idx].innerText || tr.children[idx].textContent;
+
+    const comparer = (idx, asc) => (a, b) =>
+      ((v1, v2) =>
+        v1 !== "" && v2 !== "" && !isNaN(v1) && !isNaN(v2)
+          ? v1 - v2
+          : v1.toString().localeCompare(v2))(
+        getCellValue(asc ? a : b, idx),
+        getCellValue(asc ? b : a, idx)
+      );
+
+    document.querySelectorAll("#sortableTable th").forEach((th) =>
+      th.addEventListener("click", () => {
+        const table = th.closest("table");
+        const tbody = table.querySelector("tbody");
+        Array.from(tbody.querySelectorAll("tr"))
+          .sort(
+            comparer(
+              Array.from(th.parentNode.children).indexOf(th),
+              (this.asc = !this.asc)
+            )
+          )
+          .forEach((tr) => tbody.appendChild(tr));
+      })
+    );
+  });
+</script>
+
+{% endblock %}

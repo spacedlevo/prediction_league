@@ -1,0 +1,66 @@
+{% extends "base.html" %} {% block content %}
+<div class="row">
+  <div class="col-12 text-center">
+    <h1>Fixture Stats: {{ fixture }}</h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <div class="card mt-4">
+      <div class="card-header">
+        <h2>Player Predictions</h2>
+      </div>
+      <div class="card-body">
+        {% for result, predictions in prediction_outcomes.items() %}
+        <h3>
+          {% if result == 'HW' %} Home Win {% elif result == 'D' %} Draw {% elif
+          result == 'AW' %} Away Win {% endif %}
+        </h3>
+        <table class="table mb-3">
+          <thead>
+            <tr>
+              <th>Player</th>
+              <th>Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for prediction in predictions %}
+            <tr>
+              <td>{{ prediction.player_name.title() }}</td>
+              <td>{{ prediction.score }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card mt-4">
+      <div class="card-header">
+        <h2>Popular Score Predictions</h2>
+      </div>
+      <div class="card-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Score</th>
+              <th>Count</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for score, count in popular_score %}
+            <tr>
+              <td>{{ score }}</td>
+              <td>{{ count }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

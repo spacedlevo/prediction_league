@@ -44,16 +44,18 @@ def create_table():
 def add_fixtures(gw):
     cur.executescript(
         '''
-        DROP TABLE fixtures;
+        DROP TABLE IF EXISTS fixtures;
 
         CREATE TABLE IF NOT EXISTS fixtures (
             `id` INTEGER NOT NULL PRIMARY KEY UNIQUE,
             `gameweek` INTEGER,
             `home_teamid` INTEGER NOT NULL,
-            `away_teamid` INTEGER NOT NULL 
+            `away_teamid` INTEGER NOT NULL,
+            `kick_off_dttm` TEXT
         );
         '''
     )
+
 
     fixtures_list = []
 
@@ -62,8 +64,8 @@ def add_fixtures(gw):
         sleep(1)
         json_data = r.json()
         for fixture in json_data:
-            fixtures_list.append((fixture['id'], gw, fixture['team_h'], fixture['team_a']))
-    cur.executemany('INSERT INTO fixtures VALUES (?, ?, ?, ?)', fixtures_list)
+            fixtures_list.append((fixture['id'], gw, fixture['team_h'], fixture['team_a'], fixture['kickoff_time']))
+    cur.executemany('INSERT INTO fixtures VALUES (?, ?, ?, ?, ?)', fixtures_list)
     con.commit()
 
 
@@ -74,10 +76,12 @@ def create_text_files(gw):
                 home_team.name home_team,
                 away_team.name away_team
             FROM fixtures
-            inner join teams as away_team on away_team.id = fixtures.away_teamid 
-            inner join teams as home_team on home_team.id = fixtures.home_teamid 
+            INNER JOIN teams AS away_team ON away_team.id = fixtures.away_teamid 
+            INNER JOIN teams AS home_team ON home_team.id = fixtures.home_teamid 
             WHERE gameweek = ?
+            ORDER BY fixtures.kick_off_dttm
             ''', (week, ))
+
 
         fixtures = cur.fetchall()
         formatted_fixtures = [' - '.join(fixture).title() for fixture in fixtures]

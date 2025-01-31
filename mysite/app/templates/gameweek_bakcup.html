@@ -1,0 +1,114 @@
+{% extends "base.html" %} {% block title %}EPL Prediction League{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-12 text-center">
+    <h2>Gameweek {{ gameweek }}</h2>
+    <div class="col-12 text-center transparent-background">
+      <p>Average Points This Week: {{ week_average }}</p>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12 col-md-6">
+    <h2>Gameweek League Table</h2>
+    <div class="table-responsive">
+      <table class="table table-striped table-sm">
+        <thead>
+          <tr>
+            <th>Position</th>
+            <th>Player</th>
+            <th>Correct Scores</th>
+            <th>Correct Results</th>
+            <th>Total Points</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for player in gameweek_table %}
+          <tr>
+            <td>{{ player.position }}</td>
+            <td>{{ player.player_name.title() }}</td>
+            <td>{{ player.correct_result }}</td>
+            <td>{{ player.correct_score }}</td>
+            <td>{{ player.total_points }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-12 col-md-6">
+    <h2>Gameweek Results</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Home</th>
+          <th></th>
+          <th>Away</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for match in results %}
+        <tr>
+          <td>{{ match.Home_Team.title() }}</td>
+          <td>{{ match.Home_Goals }} - {{ match.Away_Goals }}</td>
+          <td>{{ match.Away_Team.title() }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12 table-responsive">
+    <h2>Prediction Percentages</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Fixture</th>
+          <th>Home Win</th>
+          <th>Draw</th>
+          <th>Away Win</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for fixture, percentages in prediction_percentages.items() %}
+        <tr>
+          <td>
+            <a href="/fixture/{{ percentages.fixture_id }}">{{ fixture }}</a>
+          </td>
+          <td>
+            {{ percentages.home_win }}% ({{ percentages.home_win_count }})
+          </td>
+          <td>{{ percentages.draw }}% ({{ percentages.draw_count }})</td>
+          <td>
+            {{ percentages.away_win }}% ({{ percentages.away_win_count }})
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <h2>Predictions</h2>
+    {% for match, predictions in predictions_dict.items() %}
+    <div class="card mb-3">
+      <div class="card-header">{{ match }}</div>
+      <div class="card-body">
+        <ul class="list-group">
+          {% for prediction in predictions %}
+          <li class="list-group-item">
+            {{ prediction.player_name.title() }}: {{
+            prediction.predicted_home_goals }} - {{
+            prediction.predicted_away_goals }}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %} {% block title %}EPL Prediction League{% endblock %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Predictions</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Team Predictions</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Home Team</th>
+                <th>Score</th>
+                <th>Away Team</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for prediction in predictions %}
+            <tr>
+                <td>{{ prediction.home_team.title() }}</td>
+                <td>{{ prediction.predicted_home_goals }} - {{ prediction.predicted_away_goals }}</td>
+                <td>{{ prediction.away_team.title() }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html></html>
+{% endblock %}

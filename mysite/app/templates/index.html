@@ -1,0 +1,120 @@
+{% extends "base.html" %} {% block title %}EPL Prediction League{% endblock %}
+{% block content %}
+<!-- Page Content -->
+<div class="row">
+  <div class="col-12 text-center mb-4">
+    <div class="transparent-background">
+      <a href="/gameweek/{{gw}}">Gameweek {{ gw }}</a>
+      <p>Average Points This Week: {{ week_average }}</p>
+      {% if request.path == '/secondchance' %}
+      <p>The second chance starts in Gameweek 23</p>
+      {% elif request.path == '/mini' %}
+      <p>The Mini League starts in Gameweek 20</p>
+      {% endif %}
+      <p>
+        <b>Next Gameweek Deadline:</b> {{ next_deadline.deadline_date }} {{
+        next_deadline.deadline_time}}
+      </p>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <!-- League Table Column -->
+  <div class="col-12 col-md-6">
+    <h2>Overall Standing</h2>
+    <div class="table-responsive">
+      <table
+        class="table table-condensed table-bordered table-sm"
+        id="leaguetable"
+      >
+        <thead>
+          <tr>
+            <th>Pos</th>
+            <th>Player</th>
+            <th>Correct Results</th>
+            <th>Correct Scores</th>
+            <th>Points</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in league_table %}
+          <tr>
+            <td>
+              {% if row.previous_position > row.current_position %}
+              <span style="color: green; white-space: nowrap">
+                &#9650; {{ row.current_position }}
+              </span>
+              {% elif row.previous_position < row.current_position %}
+              <span style="color: red; white-space: nowrap">
+                &#9660; {{ row.current_position }}
+              </span>
+              {% else %}
+              <span style="white-space: nowrap">
+                {{ row.current_position }}
+              </span>
+              {% endif %}
+            </td>
+            <td>
+              <a href="/{{ row.player_id }}">{{ row.player_name.title() }}</a>
+              {% if row.paid == 0 %}
+              <img
+                src="/static/img/notpaid.png"
+                alt="Not Paid"
+                style="width: 20px; height: 20px"
+              />
+              {% endif %}
+            </td>
+            <td>{{ row.correct_result }}</td>
+            <td>{{ row.correct_score }}</td>
+            <td>{{ row.total_points }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Results Column -->
+  <div class="col-12 col-md-6" id="results">
+    <h2>Results</h2>
+    <ul class="list-group">
+      {% for result in results %}
+      <li class="list-group-item">
+        {{ result[0].title() }} {{ result[1] }}-{{ result[2] }} {{
+        result[3].title() }}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <h2>Gameweek Standing</h2>
+    <div class="table-responsive">
+      <table class="table table-condensed table-bordered table-sm">
+        <thead>
+          <tr>
+            <th>Player</th>
+            <th>Correct Results</th>
+            <th>Correct Scores</th>
+            <th>Points</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in gameweek_table %}
+          <tr>
+            {% for i in row %} {% if i is string %}
+            <td>{{ i.title() }}</td>
+            {% else %}
+            <td>{{ i }}</td>
+            {% endif %} {% endfor %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- /.container -->
+{% endblock %}

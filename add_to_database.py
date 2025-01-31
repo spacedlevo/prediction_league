@@ -1,14 +1,11 @@
 import sqlite3
 import csv
-import os
-import re
 import sys
 
 gw = sys.argv[1]
-db = sqlite3.connect('data/predictions.db')
+db = sqlite3.connect("data/database.db")
 c = db.cursor()
-predictions_file = f'data/predictions/predictions{gw}.csv'
-
+predictions_file = f"data/predictions/predictions{gw}.csv"
 
 
 with open(predictions_file) as f:
@@ -16,19 +13,28 @@ with open(predictions_file) as f:
     next(csvreader)
     for row in csvreader:
         print(row)
-        c.execute(''' SELECT id FROM players WHERE name = ? ''', (row[1],))
+        c.execute(
+            """ SELECT player_id FROM players WHERE player_name = ? """, (row[1],)
+        )
         user_id = c.fetchone()[0]
-        c.execute(''' SELECT id FROM teams WHERE name = ? ''', (row[2].strip(),))
+        c.execute(
+            """ SELECT team_id FROM teams WHERE team_name = ? """, (row[2].strip(),)
+        )
         home_teamid = c.fetchone()[0]
-        c.execute(''' SELECT id FROM teams WHERE name = ? ''', (row[3].strip(),))
+        c.execute(
+            """ SELECT team_id FROM teams WHERE team_name = ? """, (row[3].strip(),)
+        )
         away_teamid = c.fetchone()[0]
-        c.execute(''' SELECT id FROM fixtures WHERE home_teamid = ? AND away_teamid = ?''',
-                  (home_teamid, away_teamid))
+        c.execute(
+            """ SELECT fixture_id FROM fixtures WHERE home_teamid = ? AND away_teamid = ?""",
+            (home_teamid, away_teamid),
+        )
         fixture_id = c.fetchone()[0]
         home_goals = row[4]
         away_goals = row[5]
-        # if user_id != 11:
-        c.execute(''' INSERT OR REPLACE INTO predictions (user_id, fixture_id, home_goals, away_goals) VALUES (?, ?, ?, ?)''',
-            (user_id, fixture_id, home_goals, away_goals))
+        c.execute(
+            """ INSERT OR REPLACE INTO predictions (player_id, fixture_id, home_goals, away_goals) VALUES (?, ?, ?, ?)""",
+            (user_id, fixture_id, home_goals, away_goals),
+        )
 db.commit()
 db.close()

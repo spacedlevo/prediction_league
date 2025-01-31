@@ -138,5 +138,18 @@ config.py
 /pundits
 keys.json
 
+/logs
+*lock*
+.*
+add_to_database.py
+clean_predictions.py
+datanalysis.py
+footballmodel.py
+poisson.py
+possionv2.py
+scrape_fixtures.py
+top6.py
+cup_competition.py
+
 
 # End of https://www.gitignore.io/api/python

@@ -1,0 +1,46 @@
+{% extends "base.html" %} {% block title %}EPL Prediction League{% endblock %}
+{% block content %}
+<div class="col-12 text-center">
+  <h1>{{ web_name }}'s Page</h1>
+  <div class="transparent-background">
+    <p>
+      Check out a league table based on your
+      <a
+        href="http://spacedlevo.pythonanywhere.com/league_table/{{ player_name|lower|replace(' ', '-') }}"
+        >predictions</a
+      >
+    </p>
+  </div>
+</div>
+
+<div class="col-12">
+  <h2>Predictions</h2>
+  {% for gameweek, predictions_list in prediction_data|dictsort(reverse=True) %}
+  <div class="table-responsive">
+    <h3>Gameweek {{ gameweek }}</h3>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>Home Team</th>
+          <th>Prediction</th>
+          <th>Away Team</th>
+          <th>Result</th>
+          <th>Points</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for prediction in predictions_list %}
+        <tr>
+          <td>{{ prediction[0].title() }}</td>
+          <td>{{ prediction[1] }} - {{ prediction[2] }}</td>
+          <td>{{ prediction[3].title() }}</td>
+          <td>{{ prediction[4] }} - {{ prediction[5] }}</td>
+          <td>{{ prediction[6] + prediction[7] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
