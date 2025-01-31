@@ -151,6 +151,9 @@ scrape_fixtures.py
 top6.py
 cup_competition.py
 automate_predictions.py
+poissonv2.py
+automate_predictions.py
+
 
 
 # End of https://www.gitignore.io/api/python
