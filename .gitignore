@@ -146,10 +146,11 @@ clean_predictions.py
 datanalysis.py
 footballmodel.py
 poisson.py
-possionv2.py
+poissonv2.py
 scrape_fixtures.py
 top6.py
 cup_competition.py
+automate_predictions.py
 
 
 # End of https://www.gitignore.io/api/python
