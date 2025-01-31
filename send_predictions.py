@@ -6,7 +6,7 @@ player_id = 11
 
 db = sqlite3.connect('data/predictions.db')
 c = db.cursor()
-dbx = dropbox.Dropbox('byE-wqKe7LsAAAAAAAKj7Ye0ZDuRuqE43Udl8mznxQMjVSAtpCLm97whnpuRxW-M')
+
 gw = argv[1]
 
 c.execute(''' 
