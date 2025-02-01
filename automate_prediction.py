@@ -2,15 +2,15 @@ import sqlite3 as sql
 from datetime import datetime, timedelta
 import subprocess
 import requests
+import json
 
 predictions_db_location = (
     "/home/levo/Documents/projects/prediction_league/data/database.db"
 )
 gameweek_file = "/home/levo/Dropbox/Apps/predictions_league/gameweek.txt"
-PUSHOVER_API = {
-    "PUSHOVER_USER": "h1bpxMpSULKQIZHXT57tOztVxXcx8G",
-    "PUSHOVER_TOKEN": "",
-}
+
+with open("/home/levo/Documents/projects/prediction_league/keys.json", "r") as file:
+    PUSHOVER_API = json.load(file)
 
 
 def fetch_next_deadline():
